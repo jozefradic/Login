@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>ss</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+</head>
+<style>
+body {font-family: Arial, Helvetica, sans-serif;}
+
+input[type=text], input[type=password] {
+  width: 100%;
+  padding: 12px 20px;
+  margin: 8px 0;
+  display: inline-block;
+  border: 1px solid #ccc;
+  box-sizing: border-box;
+}
+
+button {
+  background-color: rgb(76, 86, 175);
+  color: white;
+  padding: 14px 20px;
+  margin: 8px 0;
+  border: none;
+  cursor: pointer;
+  width: 100%;
+}
+
+button:hover {
+  opacity: 0.8;
+}
+
+.container {
+  padding: 16px;
+}
+
+span.psw {
+  float: right;
+  padding-top: 16px;
+}
+
+</style>
+</head>
+<body>
+
+<h2>Login</h2>
+  <div class="container">
+    <label for="uname"> <b>Username</b></label>
+    <input type="text" id="name" placeholder="Enter Username" name="uname" required>
+
+    <label for="psw"><b>Password</b></label>
+    <input type="password" id="pass" placeholder="Enter Password" name="psw" required>
+        
+    <button id="login" type="submit">Login</button>
+  </div>
+
+  <script>
+    var url_address = 'http://www.itsovy.sk:1201';
+    $("#login").click(function() {
+        var name = document.getElementById("name").value; 
+        var pass = document.getElementById("pass").value;       
+        var settings = {
+            "async": true,
+            "crossDomain": true,
+            "url": "http://itsovy.sk:1201/login",
+            "method": "POST",
+            "headers": {
+              "content-type": "application/json",
+              "cache-control": "no-cache",
+              "postman-token": "7a11e7c9-9564-2771-01b7-2d79398af103"
+            },
+            "processData": false,
+            "data": "{\"login\":\""+name+"\",\"password\":\""+pass+"\"}"
+          }
+          console.log(settings);
+       
+    
+          $.ajax(settings).done(function (response) {
+            var key = "token";
+            var json = JSON.parse(response);
+            window.location.href = "file://C:/Users/Jojo/Desktop/projekt/index.html";
+    
+            sessionStorage.setItem('token', json["token"]);
+            sessionStorage.setItem('login', json["login"]);
+          });
+    });
+    </script>
+</html>

@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>ss</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+</head>
+<style>
+        body {font-family: Arial, Helvetica, sans-serif;}
+        
+        input[type=text], input[type=password] {
+          width: 100%;
+          padding: 12px 20px;
+          margin: 8px 0;
+          display: inline-block;
+          border: 1px solid #ccc;
+          box-sizing: border-box;
+        }
+        
+        button {
+          background-color: rgb(76, 86, 175);
+          color: white;
+          padding: 14px 20px;
+          margin: 8px 0;
+          border: none;
+          cursor: pointer;
+          width: 100%;
+        }
+        
+        button:hover {
+          opacity: 0.8;
+        }
+        
+        .container {
+          padding: 16px;
+        }
+        
+        span.psw {
+          float: right;
+          padding-top: 16px;
+        }
+        
+        </style>
+
+<body>  
+  <div>
+      <button id="logout">Logout</button><br><br>  </div>
+
+    <div id="msgs"></div>
+    Sent to:
+    <input type="text" id="sendTo">
+    Message:
+    <input type="text" id="msg">
+    <button id="sendmsg">Send</button>
+    <br>
+    <div id="result"></div><br>
+    <button id="getmsg">Get all message</button><br>
+    <table style="width:100%">
+      <div id="messages">
+      <tr><td><span id="from"></span></td></tr>
+      <tr><td><span id="msg"></span></td></tr>
+    </div> 
+</table>
+    </body>
+<script>
+
+$("#getmsg").click(function() {
+    let token = sessionStorage.getItem('token');
+    let login = sessionStorage.getItem('login');
+
+    var settings = {
+        "async": true,
+        "crossDomain": true,
+        "url": "http://itsovy.sk:1201/getmessages",
+        "method": "POST",
+        "headers": {
+          "content-type": "application/json",
+          "cache-control": "no-cache",
+          "postman-token": "69376980-c274-a4a5-80e0-5b000625e56b"
+        },
+        "processData": false,
+        "data": "{\"login\":\""+login+"\",\n\"token\":\""+token+"\"}"
+      }
+      
+      $.ajax(settings).done(function (response) {
+        console.log(response.messages);
+        showMessages(response.messages);
+
+      });
+});
+
+$("#logout").click(function() {
+    let token = sessionStorage.getItem('token');
+    let login = sessionStorage.getItem('login');
+
+    var settings = {
+        "async": true,
+        "crossDomain": true,
+        "url": "http://itsovy.sk:1201/logout",
+        "method": "POST",
+        "headers": {
+          "content-type": "application/json",
+          "cache-control": "no-cache",
+          "postman-token": "7a11e7c9-9564-2771-01b7-2d79398af103"
+        },
+        "processData": false,
+        "data": "{\"login\":\""+login+"\",\n\"token\":\""+token+"\"}"
+      }
+      console.log(settings);      
+      $.ajax(settings).done(function (response) {
+        sessionStorage.removeItem("token");
+        sessionStorage.removeItem("login");
+        window.location.href = "file://C:/Users/Jojo/Desktop/projekt/login.html";
+      });
+});
+
+$("#sendmsg").click(function() {
+    let token = sessionStorage.getItem('token');
+    let login = sessionStorage.getItem('login');
+
+    var sendTo = document.getElementById("sendTo").value;       
+    var msg = document.getElementById("msg").value;     
+    var settings = {
+        "async": true,
+        "crossDomain": true,
+        "url": "http://itsovy.sk:1201/sendmessage",
+        "method": "POST",
+        "headers": {
+          "content-type": "application/json",
+          "cache-control": "no-cache",
+          "postman-token": "3b4f4e21-ec8f-479b-b8bb-51ac9a5ba14a"
+        },
+        "processData": false,
+        "data": "{\"login\":\""+login+"\",\"token\":\""+token+"\",\"user\":\""+sendTo+"\",\"message\":\""+msg+"\"}"
+      }
+      console.log(settings);              
+      $.ajax(settings).done(function (response) {
+        console.log(response);
+      });
+});
+
+function showMessages(messages){
+  console.log(messages);
+  messages.forEach(function(message){
+    $('#messages').append($('<span> User:'+message.from+' Message:</span>'));
+    $('#messages').append($('<span>'+message.message+'</span> <br>'));
+  })
+
+}
+</script>
+</html>
